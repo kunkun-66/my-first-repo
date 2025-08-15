@@ -277,3 +277,5 @@ void loadData(Employee employees[], int *numEmployees) {
 
     printf("Data loaded successfully.\n");
 }
+
+This line was added on feature-demo branch
