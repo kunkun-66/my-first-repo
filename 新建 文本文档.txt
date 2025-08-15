@@ -1,0 +1,281 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_EMPLOYEES 100
+
+typedef struct {
+    char name[50];
+    int id;
+    float baseSalary;
+    float positionSalary;
+    float allowance;
+    float medicalInsurance;
+    float providentFund;
+} Employee;
+
+void addRecord(Employee employees[], int *numEmployees);
+void displayRecord(Employee employees[], int numEmployees);
+void modifyRecord(Employee employees[], int numEmployees);
+void searchRecord(Employee employees[], int numEmployees);
+void deleteRecord(Employee employees[], int *numEmployees);
+void calculateStatistics(Employee employees[], int numEmployees);
+void saveData(Employee employees[], int numEmployees);
+void loadData(Employee employees[], int *numEmployees);
+
+int main() {
+    Employee employees[MAX_EMPLOYEES];
+    int numEmployees = 0;
+    int choice;
+
+    loadData(employees, &numEmployees);
+
+    do {
+        printf("\nEmployee Management System\n");
+        printf("1. 添加记录\n");
+        printf("2. 展示记录\n");
+        printf("3. 修改记录\n");
+        printf("4. 查找记录\n");
+        printf("5. 删除记录d\n");
+        printf("6. 统计\n");
+        printf("7. 保存数据\n");
+        printf("8. 退出\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addRecord(employees, &numEmployees);
+                break;
+            case 2:
+                displayRecord(employees, numEmployees);
+                break;
+            case 3:
+                modifyRecord(employees, numEmployees);
+                break;
+            case 4:
+                searchRecord(employees, numEmployees);
+                break;
+            case 5:
+                deleteRecord(employees, &numEmployees);
+                break;
+            case 6:
+                calculateStatistics(employees, numEmployees);
+                break;
+            case 7:
+                saveData(employees, numEmployees);
+                break;
+            case 8:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != 8);
+
+    return 0;
+}
+
+void addRecord(Employee employees[], int *numEmployees) {
+    Employee newEmployee;
+
+    printf("Enter 职工名字: ");
+    scanf("%s", newEmployee.name);
+    printf("Enter 职工 ID: ");
+    scanf("%d", &newEmployee.id);
+    printf("Enter 基本工资: ");
+    scanf("%f", &newEmployee.baseSalary);
+    printf("Enter 职位工资: ");
+    scanf("%f", &newEmployee.positionSalary);
+    printf("Enter 津贴: ");
+    scanf("%f", &newEmployee.allowance);
+    printf("Enter 医疗保险: ");
+    scanf("%f", &newEmployee.medicalInsurance);
+    printf("Enter 公积金: ");
+    scanf("%f", &newEmployee.providentFund);
+
+    employees[*numEmployees] = newEmployee;
+    (*numEmployees)++;
+
+    printf("添加职工成功.\n");
+}
+
+void displayRecord(Employee employees[], int numEmployees) {
+    int i;
+
+    if (numEmployees == 0) {
+        printf("No records found.\n");
+        return;
+    }
+
+    printf("职工记录:\n");
+    for (i = 0; i < numEmployees; i++) {
+        printf("名字: %s\n", employees[i].name);
+        printf("ID: %d\n", employees[i].id);
+        printf("基本工资: %.2f\n", employees[i].baseSalary);
+        printf("职位工资: %.2f\n", employees[i].positionSalary);
+        printf("津贴: %.2f\n", employees[i].allowance);
+        printf("医疗保险: %.2f\n", employees[i].medicalInsurance);
+        printf("公积金: %.2f\n", employees[i].providentFund);
+        printf("--------------------\n");
+    }
+}
+
+void modifyRecord(Employee employees[], int numEmployees) {
+    int id, i;
+    int found = 0;
+
+    printf("Enter employee ID to modify: ");
+    scanf("%d", &id);
+
+    for (i = 0; i < numEmployees; i++) {
+        if (employees[i].id == id) {
+            printf("Enter 新的id: ");
+            scanf("%f", &employees[i].baseSalary);
+            printf("Enter new position salary: ");
+            scanf("%f", &employees[i].positionSalary);
+            printf("Enter new allowance: ");
+            scanf("%f", &employees[i].allowance);
+            printf("Enter new medical insurance: ");
+            scanf("%f", &employees[i].medicalInsurance);
+            printf("Enter new provident fund: ");
+            scanf("%f", &employees[i].providentFund);
+
+            printf("Record modified successfully.\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Record not found.\n");
+    }
+}
+
+void searchRecord(Employee employees[], int numEmployees) {
+    char name[50];
+    int i;
+    int found = 0;
+
+    printf("Enter employee name to search: ");
+    scanf("%s", name);
+
+    for (i = 0; i < numEmployees; i++) {
+        if (strcmp(employees[i].name, name) == 0) {
+            printf("Name: %s\n", employees[i].name);
+            printf("ID: %d\n", employees[i].id);
+            printf("Base Salary: %.2f\n", employees[i].baseSalary);
+            printf("Position Salary: %.2f\n", employees[i].positionSalary);
+            printf("Allowance: %.2f\n", employees[i].allowance);
+            printf("Medical Insurance: %.2f\n", employees[i].medicalInsurance);
+            printf("Provident Fund: %.2f\n", employees[i].providentFund);
+            printf("--------------------\n");
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("Record not found.\n");
+    }
+}
+
+void deleteRecord(Employee employees[], int *numEmployees) {
+    int id, i, j;
+    int found = 0;
+
+    printf("Enter employee ID to delete: ");
+    scanf("%d", &id);
+
+    for (i = 0; i < *numEmployees; i++) {
+        if (employees[i].id == id) {
+            for (j = i; j < *numEmployees - 1; j++) {
+                employees[j] = employees[j + 1];
+            }
+            (*numEmployees)--;
+            printf("Record deleted successfully.\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Record not found.\n");
+    }
+}
+
+void calculateStatistics(Employee employees[], int numEmployees) {
+    int i;
+    float totalSalary = 0;
+    float averageSalary;
+    int countAbove3000 = 0;
+    int countBetween2000And3000 = 0;
+    int countBetween1000And2000 = 0;
+    int totalCount = numEmployees;
+
+    for (i = 0; i < numEmployees; i++) {
+        float total = employees[i].baseSalary + employees[i].positionSalary + employees[i].allowance;
+        if (total > 3000) {
+            countAbove3000++;
+        } else if (total >= 2000 && total <= 3000) {
+            countBetween2000And3000++;
+        } else if (total >= 1000 && total < 2000) {
+            countBetween1000And2000++;
+        }
+
+        totalSalary += total;
+    }
+
+    averageSalary = totalSalary / numEmployees;
+
+    printf("Average Salary: %.2f\n", averageSalary);
+    printf("Total Salary: %.2f\n", totalSalary);
+    printf("Count above 3000: %d\n", countAbove3000);
+    printf("Count between 2000 and 3000: %d\n", countBetween2000And3000);
+    printf("Count between 1000 and 2000: %d\n", countBetween1000And2000);
+    printf("Total Count: %d\n", totalCount);
+}
+
+void saveData(Employee employees[], int numEmployees) {
+    FILE *file = fopen("employees.txt", "w");
+    int i;
+
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    for (i = 0; i < numEmployees; i++) {
+        fprintf(file, "%s %d %.2f %.2f %.2f %.2f %.2f\n", employees[i].name, employees[i].id, employees[i].baseSalary,
+                employees[i].positionSalary, employees[i].allowance, employees[i].medicalInsurance,
+                employees[i].providentFund);
+    }
+
+    fclose(file);
+
+    printf("Data saved successfully.\n");
+}
+
+void loadData(Employee employees[], int *numEmployees) {
+    FILE *file = fopen("employees.txt", "r");
+    int i;
+
+    if (file == NULL) {
+        printf("No existing data found.\n");
+        return;
+    }
+
+    for (i = 0; !feof(file); i++) {
+        fscanf(file, "%s %d %f %f %f %f %f\n", employees[i].name, &employees[i].id, &employees[i].baseSalary,
+               &employees[i].positionSalary, &employees[i].allowance, &employees[i].medicalInsurance,
+               &employees[i].providentFund);
+    }
+
+    *numEmployees = i - 1;
+
+    fclose(file);
+
+    printf("Data loaded successfully.\n");
+}
+
+This line was added on feature-demo branch
